@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  proxy:
+    image: serkanerip/erip-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  user-service:
+    image: nginx
+    ports:
+      - "80"
+    labels:
+      - "erip-proxy.match=/nginx"
+      - "erip-proxy.port=80"
+    volumes:
+      - "./users-nginx.conf:/etc/nginx/nginx.conf"
+  echo-service:
+    image: ealen/echo-server
+    ports:
+      - "80"
+    labels:
+      - "erip-proxy.match=/echo"
+      - "erip-proxy.port=80"
